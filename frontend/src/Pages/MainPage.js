@@ -3,7 +3,7 @@ import { getTables, getColumns, convertToArray } from '../functions'
 import { Picker } from '../Components/Picker'
 import axios from 'axios'
 import { server } from '../Config'
-
+import { ShowData } from '../Components/ShowData'
 
 
 export const MainPage = () => {
@@ -19,7 +19,6 @@ export const MainPage = () => {
 
     //DB data
     const [data, setData] = useState([])
-    const [shownData, setShownData] = useState([])
     
 
     const initFunction = async () =>{
@@ -56,11 +55,18 @@ export const MainPage = () => {
             }
         })
 
-        setData( convertToArray( response.data ) )
+        setTimeout( () => {}, 75)
+        const dataArray = convertToArray( response.data )
+        setData( dataArray )
+    }
+
+    const showData = () => {
+        
     }
 
 
     useEffect( () => { initFunction() }, [])
+    useEffect( () => { showData() }, [ data ])
     
 
     return (
@@ -72,16 +78,14 @@ export const MainPage = () => {
                 <>{columnNames}</><br/>
                 <>{selectedColumn}</><br/>
             </div>
-            <div>
-                <form>
+            <div className='FormatDiv'>
+                <form onSubmit={ (e) => { e.preventDefault(); getData() }}>
                     <Picker setValue={ handleTableChange } infoArray={tableNames}/>
                     <Picker setValue={ setSelectedColumn } infoArray={columnNames}/>
+                    <button type='submit'>Get data</button>
                 </form>
-                <button onClick={ getData }>Get data</button>
             </div>
-            <div>
-                <>{data}</>
-            </div>
+            <ShowData data={data}/>
         </div>
     )
 }

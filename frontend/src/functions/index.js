@@ -40,7 +40,6 @@ export const getColumns = async( table ) => {
 export const convertToArray = ( object ) => {
 
     const data = []
-    const objectLen = object.length
 
     object.map( ( array ) => {
 

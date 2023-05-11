@@ -1,0 +1,21 @@
+html{
+    box-sizing: border-box;
+    margin: 50;
+    padding: 100;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+body{
+    background: linear-gradient(
+        90deg,
+        rgb(255, 192, 75) 0%,
+        rgb(234, 234, 234) 100%
+    )
+}
+
+h1{
+    margin: 32px;
+    color: black;
+    font-size: 30;
+}
+
