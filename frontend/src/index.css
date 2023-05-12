@@ -3,6 +3,7 @@ html{
     margin: 50;
     padding: 100;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    text-align: center;
 }
 
 body{
@@ -19,3 +20,30 @@ h1{
     font-size: 30;
 }
 
+.FormatDiv{
+    display:flex;
+    flex-direction: column;
+    justify-content: start;
+    width: 520px;
+    min-height: 300;
+    background: rgb(255, 255, 255);
+    text-align: center;
+    margin: 128px auto;
+    border-radius: 10px;
+    padding-bottom: 32px;
+}
+
+button{
+    padding: 16px;
+    border: none;
+    border-radius: 4px 4px 4px 4px;
+    cursor: pointer;
+    outline: none;
+    background: linear-gradient(
+        90deg,
+        rgb(54, 212, 230) 0%,
+        rgb(181, 50, 214) 100%
+    );
+    color: #fff;
+    text-transform: capitalize;
+}

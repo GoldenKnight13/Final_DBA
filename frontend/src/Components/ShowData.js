@@ -11,7 +11,6 @@ export const ShowData = ( { data } ) => {
                 const value = `\t${ tuple[i] }`
                 string = string + value
             }
-            console.log( string )
 
             return <div key={tuple[0]}>
                 <h3>{string}</h3>
