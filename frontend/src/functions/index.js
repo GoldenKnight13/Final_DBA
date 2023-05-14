@@ -53,3 +53,29 @@ export const convertToArray = ( object ) => {
 
     return data
 }
+
+export const matrixToArray = ( matrix ) => {
+
+    const data = []
+
+    matrix.map( (row) => {
+        return row.map( (value) => {
+            return data.push( value )
+        })
+    })
+
+    return data
+
+}
+
+export const getDifferentValues = async( table, field ) => {
+    
+    const values = await axios.get(`${server}/getDifferentValues`, {
+        params: {
+            table,
+            field
+        }
+    })
+    return matrixToArray( convertToArray( values.data ) )
+
+}

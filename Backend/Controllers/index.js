@@ -1,21 +1,7 @@
 const { db } = require('../config')
 
 //Create
-const insertData = async (req, res) => {
 
-    const { name, age, mail, phone } = req.body
-
-    db.query( 'INSERT INTO test VALUES(?,?,?,?)', [name, age, mail, phone], (error, result) => {
-
-        if(error){
-            console.log(error)
-        }
-
-        res.send(result)
-
-    })
-
-}
 
 //Read
 const getTables = async( req, res ) => {  
@@ -57,11 +43,24 @@ const getCount = async (req, res) => {
 
 const getData = async (req, res) => {
 
-    const { table, column, page } = req.query
+    const { table, column } = req.query
     const selectedColumns = (column === 'all') ? '*' : column
-    const selectedpage = ( Number(page) === 0) ? '' : ` LIMIT ${page * 10}, 10`
 
-    const query = `SELECT ${selectedColumns} FROM  ${table}${selectedpage}`
+    const query = `SELECT ${selectedColumns} FROM  ${table}`
+
+    db.query( query, (error, result) => {
+        if(error){
+            console.log(error)
+        }
+        res.send( result )
+    })
+}
+
+const getDistinctValues = async(req, res) => {
+
+    const {table, field } = req.query
+    const column = (field === 'all') ? '*' : field
+    const query = `SELECT DISTINCT ${column} FROM ${table}`
 
     db.query( query, (error, result) => {
         if(error){
@@ -73,16 +72,12 @@ const getData = async (req, res) => {
 
 //Update
 //Delete
-const proof = async(req, res) => {
-
-}
 
 
 module.exports = {
     getTables,
     getColumns,
     getCount,
-    getData, 
-    insertData,
-    proof
+    getData,
+    getDistinctValues
 }

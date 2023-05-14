@@ -1,5 +1,5 @@
 const express = require('express')
-const { getData , insertData, proof, getTables, getColumns, getCount } = require('../Controllers')
+const { getData, getTables, getColumns, getCount, getDistinctValues } = require('../Controllers')
 
 const router = express.Router()
 
@@ -8,15 +8,11 @@ router.get('/getTableNames', getTables )
 router.get('/getColumnNames', getColumns )
 router.get('/getData', getData )
 router.get('/getCount', getCount )
-router.get('/proof', proof)
+router.get('/getDifferentValues', getDistinctValues)
 
 
 //POST
-router.put('/insertData', insertData )
-
-
 //DELETE
-
 //PUT
 
 module.exports = { 

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { getTables, getColumns, convertToArray } from '../functions'
-import { Picker, ShowData, PageSelector } from '../Components/index'
+import { getTables, getColumns, convertToArray, getDifferentValues } from '../functions'
+import { Picker, ShowData } from '../Components/index'
 import axios from 'axios'
-import { maxTuplesPerPage, server } from '../Config'
+import { server } from '../Config'
 
 
 export const MainPage = () => {
@@ -10,12 +10,10 @@ export const MainPage = () => {
     //DB structure info
     const [tableNames, setTableNames] = useState([])
     const [columnNames, setColumnNames] = useState([])
-    const [maxPageNumber, setMaxPageNumber] = useState(undefined)
 
     //User selected variables
     const [selectedTable, setSelectedTable] = useState(undefined)
     const [selectedColumn, setSelectedColumn] = useState(undefined)
-    const [pageNumber, setPageNumber] = useState(0)
     const [text, setText] = useState(undefined)
 
     //DB data
@@ -37,8 +35,6 @@ export const MainPage = () => {
         setSelectedColumn( 'all' )
 
         setTimeout( ()=>{}, 50 )
-
-        getPages( tables[0] )
     }
 
     const handleTableChange = async( value ) => {
@@ -47,25 +43,13 @@ export const MainPage = () => {
         const columns = await getColumns( value )
         setColumnNames(columns)
         setSelectedColumn( 'all' )
-        getPages( value )
-    }
-
-    const getPages = async( table ) => {
-
-        const response = await axios.get(`${server}/getCount`, {
-            params: { table}
-        })
-        const dataNumber = convertToArray( response.data )[0][0]
-        setMaxPageNumber( Math.ceil( dataNumber / maxTuplesPerPage ) )
-
     }
 
     const getData = async() => {
         const response = await axios.get(`${server}/getData`, {
             params:{
                 table: selectedTable,
-                column: selectedColumn,
-                page: pageNumber
+                column: selectedColumn
             }
         })
 
@@ -90,7 +74,7 @@ export const MainPage = () => {
                 <>{text}</><br/>
                 <>{maxPageNumber}</><br/>
             </div> */}
-
+            <>{text}</>
             <div className='FormatDiv'>
                 <form onSubmit={ (e) => { e.preventDefault(); getData() }}>
 
@@ -104,9 +88,8 @@ export const MainPage = () => {
 
                 </form>
             </div>
-
+            <button onClick={async() => { console.log( await getDifferentValues(selectedTable, selectedColumn) ) }}>Get Different Values</button>
             <ShowData data={data}/>
-            <PageSelector maxPages={maxPageNumber} changePage={ setPageNumber }/>
         </div>
     )
 }

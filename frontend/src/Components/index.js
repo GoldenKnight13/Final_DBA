@@ -1,6 +1,6 @@
-export * from './PageSelector'
 export * from './Picker'
 export * from './ShowData'
 export * from './NavBar'
 export * from './LineGraph'
 export * from './DoughnutGraph'
+export * from './BarGraph'

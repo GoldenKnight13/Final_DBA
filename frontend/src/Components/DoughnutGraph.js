@@ -17,14 +17,11 @@ export const DoughnutGraph = ({labels, values, options}) => {
             'rgb(255, 99, 132)',
             'rgb(54, 162, 235)',
             'rgb(255, 205, 86)'
-        ],
-        hoverOffset: 4
-        }]
+        ]}]
     }
     
     return (
-        <div style={{width: '450px', height: '230px'}}> 
-            <p><b>Hello</b> there</p>
+        <div style={{width: '600px', height: '300px'}}> 
             <Doughnut data={data} options={options}/>
         </div>
     )

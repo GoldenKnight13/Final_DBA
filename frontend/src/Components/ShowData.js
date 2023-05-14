@@ -12,8 +12,8 @@ export const ShowData = ( { data } ) => {
                 string = string + value
             }
 
-            return <div key={tuple}>
-                <h3>{string}</h3>
+            return <div key={ Math.floor( Math.random() * 1000) }>
+                <h6>{string}</h6>
             </div>
         })
     }
