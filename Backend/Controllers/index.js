@@ -42,12 +42,17 @@ const getColumns = async ( req, res ) => {
         res.send(result)
 
     })
+}
 
-    try {
-        
-    } catch (error) {
-        console.log(error)
-    }
+const getCount = async (req, res) => {
+
+    const query = `SELECT COUNT(*) FROM ${ req.query.table }`
+    db.query( query, (error, result) => {
+        if(error){
+            console.log(error)
+        }
+        res.send( result )
+    })
 }
 
 const getData = async (req, res) => {
@@ -76,6 +81,7 @@ const proof = async(req, res) => {
 module.exports = {
     getTables,
     getColumns,
+    getCount,
     getData, 
     insertData,
     proof

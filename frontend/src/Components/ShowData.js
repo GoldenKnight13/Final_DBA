@@ -12,7 +12,7 @@ export const ShowData = ( { data } ) => {
                 string = string + value
             }
 
-            return <div key={tuple[0]}>
+            return <div key={tuple}>
                 <h3>{string}</h3>
             </div>
         })

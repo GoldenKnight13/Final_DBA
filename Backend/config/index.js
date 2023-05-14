@@ -1,5 +1,5 @@
 const mysql = require('mysql')
-const database = 'proof'
+const database = 'Restaurantes'
 
 
 const db = mysql.createConnection({

@@ -6,11 +6,11 @@ export const getTables = async() => {
     const tablesInfo = await axios.get(`${server}/getTableNames`)
 
     let tables = []
-    const len = tablesInfo.data.length
-
-    for( let i = 0; i < len; i++ ){
-        tables.push( tablesInfo.data[i].Tables_in_proof )
-    }
+    tablesInfo.data.map( (object) => {
+        return Object.keys(object).map( (index) => {
+            return tables.push( object[index] )
+        })
+    })
 
     return tables
 
@@ -45,13 +45,11 @@ export const convertToArray = ( object ) => {
 
         let values = []
         Object.keys( array ).map( (index) => {
-            values.push( array[index] )
+            return values.push( array[index] )
         })
 
-        data.push( values )
+        return data.push( values )
     })
 
     return data
 }
-
-

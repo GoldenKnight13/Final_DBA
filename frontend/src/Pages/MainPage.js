@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { getTables, getColumns, convertToArray } from '../functions'
-import { Picker } from '../Components/Picker'
+import { Picker, ShowData, PageSelector } from '../Components/index'
 import axios from 'axios'
-import { server } from '../Config'
-import { ShowData } from '../Components/ShowData'
+import { maxTuplesPerPage, server } from '../Config'
 
 
 export const MainPage = () => {
@@ -38,6 +37,8 @@ export const MainPage = () => {
         setSelectedColumn( 'all' )
 
         setTimeout( ()=>{}, 50 )
+
+        getPages( tables[0] )
     }
 
     const handleTableChange = async( value ) => {
@@ -46,6 +47,17 @@ export const MainPage = () => {
         const columns = await getColumns( value )
         setColumnNames(columns)
         setSelectedColumn( 'all' )
+        getPages( value )
+    }
+
+    const getPages = async( table ) => {
+
+        const response = await axios.get(`${server}/getCount`, {
+            params: { table}
+        })
+        const dataNumber = convertToArray( response.data )[0][0]
+        setMaxPageNumber( Math.ceil( dataNumber / maxTuplesPerPage ) )
+
     }
 
     const getData = async() => {
@@ -62,26 +74,22 @@ export const MainPage = () => {
         setData( dataArray )
     }
 
-    const showData = () => {
-        
-    }
-
 
     useEffect( () => { initFunction() }, [])
-    useEffect( () => { showData() }, [ data ])
 
 
     return (
         <div>
             <h1>Main Page</h1>
 
-            <div>
+          {/*   <div>
                 <>{tableNames}</><br/>
                 <>{selectedTable}</><br/>
                 <>{columnNames}</><br/>
                 <>{selectedColumn}</><br/>
                 <>{text}</><br/>
-            </div>
+                <>{maxPageNumber}</><br/>
+            </div> */}
 
             <div className='FormatDiv'>
                 <form onSubmit={ (e) => { e.preventDefault(); getData() }}>
@@ -93,12 +101,12 @@ export const MainPage = () => {
                         e.preventDefault(); setText( e.target.value ) }}/>
 
                     <button type='submit'>Get data</button>
-                    
+
                 </form>
             </div>
 
             <ShowData data={data}/>
-
+            <PageSelector maxPages={maxPageNumber} changePage={ setPageNumber }/>
         </div>
     )
 }
