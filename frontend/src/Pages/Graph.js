@@ -1,5 +1,5 @@
 import React from 'react'
-import { LineGraph } from '../Components';
+import { DoughnutGraph, LineGraph } from '../Components';
 
 export const Graph = () => {
 
@@ -12,6 +12,7 @@ export const Graph = () => {
         <div>
             <h2>Graph</h2>
             <LineGraph labels={meses} values={values} options={myOptions}/>
+            <DoughnutGraph labels={meses} values={values} options={myOptions}/>
         </div>
     )
 }
