@@ -79,3 +79,16 @@ export const getDifferentValues = async( table, field ) => {
     return matrixToArray( convertToArray( values.data ) )
 
 }
+
+export const getData = async(table, column) => {
+    const response = await axios.get(`${server}/getData`, {
+        params:{
+            table,
+            column
+        }
+    })
+
+    setTimeout( () => {}, 75)
+    const dataArray = convertToArray( response.data )
+    return dataArray
+}

@@ -1,4 +1,4 @@
 export * from './Graph'
-export * from './MainPage'
+export * from './ShowDataPage'
 export * from './Proof'
-export * from './Playground'
+export * from './MainPage'

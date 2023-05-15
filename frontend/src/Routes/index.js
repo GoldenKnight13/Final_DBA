@@ -1,6 +1,6 @@
 import React from 'react'
 import { BrowserRouter, Route, Routes  } from 'react-router-dom'
-import { Proof, Graph, MainPage, Playground } from '../Pages'
+import { Proof, Graph, ShowDataPage, MainPage } from '../Pages'
 import { NavBar } from '../Components'
 
 export const Router = () => {
@@ -11,10 +11,10 @@ export const Router = () => {
             </div>
             <div>
                 <Routes>
-                    <Route path='/*' element={ <Proof/> }/>
+                    <Route path='/*' element={ <MainPage/> }/>
                     <Route path='/graph' element={ <Graph/> }/>
-                    <Route path='/main' element={ <MainPage/> }/>
-                    <Route path='/playground' element={ <Playground/> }/>
+                    <Route path='/showDataPage' element={ <ShowDataPage/> }/>
+                    <Route path='/proof' element={ <Proof/> }/>
                 </Routes>
             </div>
         </BrowserRouter>

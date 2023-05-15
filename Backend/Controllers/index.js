@@ -46,7 +46,7 @@ const getData = async (req, res) => {
     const { table, column } = req.query
     const selectedColumns = (column === 'all') ? '*' : column
 
-    const query = `SELECT ${selectedColumns} FROM  ${table}`
+    const query = `SELECT ${selectedColumns} FROM  ${table} LIMIT 20`
 
     db.query( query, (error, result) => {
         if(error){
