@@ -80,7 +80,7 @@ export const getDifferentValues = async( table, field ) => {
 
 }
 
-export const getData = async(table, column) => {
+export const getData = async(table, column, objectReturnType ) => {
     const response = await axios.get(`${server}/getData`, {
         params:{
             table,
@@ -89,6 +89,49 @@ export const getData = async(table, column) => {
     })
 
     setTimeout( () => {}, 75)
-    const dataArray = convertToArray( response.data )
-    return dataArray
+
+    if( objectReturnType ){
+        return response.data
+    } else {
+        return convertToArray( response.data )
+    }
+}
+
+export const getTelephonesAndLocations = async() => {
+    const response = await axios.get(`${server}/getTelephonesAndLocations`)
+    const data = response.data
+
+    let actualRestaurant = undefined
+    let locationsCounter = 0
+    let locationsArray = []
+    let telephonesArray = []
+
+    data.map(( tuple ) => {
+
+        if( actualRestaurant !== tuple.nombre_restaurante ){
+            actualRestaurant = tuple.nombre_restaurante
+            locationsCounter = 0
+        }
+
+        if( locationsCounter >= 3){
+            return undefined
+        } else {
+            locationsArray.push( [actualRestaurant ,tuple.direccion] )
+            telephonesArray.push( [actualRestaurant ,tuple.telefono] )
+            locationsCounter += 1
+        }
+        return undefined
+    }) 
+    
+    const telephonesAndLocations = {
+        locationsArray,
+        telephonesArray
+    }
+    
+    return telephonesAndLocations
+}
+
+export const getDateRange = async() => {
+    const response = await axios.get(`${server}/getDateRange`)
+    return  matrixToArray(convertToArray( response.data ))
 }

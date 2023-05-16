@@ -70,6 +70,39 @@ const getDistinctValues = async(req, res) => {
     })
 }
 
+const getTelephonesAndLocations = async(req, res) => {
+
+    const query = 'SELECT restaurantes.nombre_restaurante, sucursales.direccion, sucursales.telefono FROM restaurantes, sucursales WHERE restaurantes.id_restaurante = sucursales.id_restaurante and restaurantes.id_restaurante <= 20'
+    db.query(query, (error, result) => {
+        if(error){
+            console.log(error)
+        }
+        res.send(result)
+    })
+}
+
+const getDateRange = async(req, res) => {
+
+    const query = 'SELECT MIN( fecha_visita ) inicio, MAX( fecha_visita ) fin FROM visitas'
+    db.query( query, (error, result) => {
+        if(error){
+            console.log(error)
+        }
+        res.send(result)
+    })
+
+}
+
+const proof = async(req,res) => {
+    const query = 'SELECT * FROM restaurantes, sucursales WHERE restaurantes.id_restaurante = sucursales.id_restaurante and restaurantes.id_restaurante <= 20'
+    db.query(query, (error, result) => {
+        if(error){
+            console.log(error)
+        }
+        res.send(result)
+    })
+}
+
 //Update
 //Delete
 
@@ -79,5 +112,8 @@ module.exports = {
     getColumns,
     getCount,
     getData,
-    getDistinctValues
+    getDistinctValues,
+    getTelephonesAndLocations,
+    getDateRange,
+    proof
 }

@@ -2,20 +2,23 @@ import React from 'react'
 import { Container, Nav, Navbar, NavDropdown} from 'react-bootstrap';
 
 export const NavBar = () => {
+
+    const dropdownTitle = 'Estadisticas'
+
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" sticky='top'>
             <Container>
-                <Navbar.Brand href='/'>Restaurants</Navbar.Brand>
+                <Navbar.Brand href='/'>Restaurantes</Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
                         <Nav.Link href='/graph'>Graph</Nav.Link>
                         <Nav.Link href='/showDataPage'>Show Data</Nav.Link>
                         <Nav.Link href='/proof'>Proof</Nav.Link>
-                        <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
-                            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.2">
-                                Another action
+                        <NavDropdown title={`${dropdownTitle}`} id="collasible-nav-dropdown">
+                            <NavDropdown.Item href="/individualStats">Individuales</NavDropdown.Item>
+                            <NavDropdown.Item href="/groupStats">
+                                Grupales
                             </NavDropdown.Item>
                             <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
                             <NavDropdown.Divider />

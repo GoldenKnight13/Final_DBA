@@ -1,13 +1,17 @@
 import React from 'react'
 import { CollpaseSection } from './CollpaseSection'
 
-export const CollapseTable = ({data, width}) => {
+export const CollapseTable = ({restaurantData, telephonesAndLocations, width}) => {
 
     return (
         <div style={{width}}>
-            <>{ data.map( (tuple) => {
+            <>{ restaurantData.map( (tuple) => {
             return <div>
-                <CollpaseSection tuple={tuple} width={width}/>
+                <CollpaseSection 
+                    key={ Math.floor( Math.random() * Date.now() )}
+                    tuple={tuple} 
+                    telephonesAndLocations={telephonesAndLocations} 
+                    width={width}/>
             </div>
         }) }</>
         </div>
