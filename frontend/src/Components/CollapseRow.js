@@ -3,8 +3,7 @@ import { Button } from 'react-bootstrap'
 
 export const CollapseRow = ({tuple, telephonesAndLocations, width}) => {
 
-    const {nombre_restaurante, tipo_comida, pagina_web} = tuple
-    const image = "https://media.timeout.com/images/105378187/750/422/image.jpg"
+    const {nombre_restaurante, tipo_comida, pagina_web, imagen} = tuple
     const id = tuple.nombre_restaurante 
 
     const getMyLocations = () => {
@@ -35,7 +34,7 @@ export const CollapseRow = ({tuple, telephonesAndLocations, width}) => {
 
     return (
         <div className="card" style={{width}}>
-            <img className="card-img-top" src={`${image}`} alt=""/>
+            <img className="card-img-top" src={`${imagen}`} alt=""/>
             <div className="card-body">
                 <h4 className="card-title">{nombre_restaurante}</h4>
                 <div className='p-3 d-flex align-items-center'> 

@@ -1,6 +1,5 @@
-export * from './Graph'
-export * from './ShowDataPage'
 export * from './Proof'
 export * from './MainPage'
 export * from './GroupStats'
 export * from './IndividualStats'
+export * from './Meme'

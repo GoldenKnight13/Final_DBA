@@ -46,7 +46,7 @@ const getData = async (req, res) => {
     const { table, column } = req.query
     const selectedColumns = (column === 'all') ? '*' : column
 
-    const query = `SELECT ${selectedColumns} FROM  ${table} LIMIT 20`
+    const query = `SELECT ${selectedColumns} FROM  ${table}`
 
     db.query( query, (error, result) => {
         if(error){
@@ -72,7 +72,7 @@ const getDistinctValues = async(req, res) => {
 
 const getTelephonesAndLocations = async(req, res) => {
 
-    const query = 'SELECT restaurantes.nombre_restaurante, sucursales.direccion, sucursales.telefono FROM restaurantes, sucursales WHERE restaurantes.id_restaurante = sucursales.id_restaurante and restaurantes.id_restaurante <= 20'
+    const query = 'SELECT restaurantes.nombre_restaurante, sucursales.direccion, sucursales.telefono FROM restaurantes, sucursales WHERE restaurantes.id_restaurante = sucursales.id_restaurante'
     db.query(query, (error, result) => {
         if(error){
             console.log(error)
@@ -94,7 +94,9 @@ const getDateRange = async(req, res) => {
 }
 
 const proof = async(req,res) => {
-    const query = 'SELECT * FROM restaurantes, sucursales WHERE restaurantes.id_restaurante = sucursales.id_restaurante and restaurantes.id_restaurante <= 20'
+    
+    console.log( req.query )
+    const query = 'SELECT * FROM pedidos, restaurantes LIMIT 30'
     db.query(query, (error, result) => {
         if(error){
             console.log(error)
