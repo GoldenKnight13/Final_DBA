@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { getData, getDateRange, matrixToArray } from '../functions'
-import { DoughnutGraph, IndividualYearStats, Picker } from '../Components'
+import { DoughnutGraph, LineGraph, Picker } from '../Components'
 
 export const IndividualStats = () => {
     
@@ -11,14 +11,18 @@ export const IndividualStats = () => {
     const [yearsArray, setYearsArray] = useState([])
 
     //User variables
-    
+    const [selectedYear, setSelectedYear] = useState(undefined)
     const [selectedRestaurant, setSelectedRestaurant] = useState(undefined)
 
     //Size variable
     const width = 600
+    const options = {}
 
     const platillos = ['Pizza', 'Enchiladas', 'Sopa', 'Chilaquiles', 'Hamburguesa', 'Bistec', 'Cheesecake', 'Pie de limon', 'Galletas', 'Atun' ]
     const ventas = [ 100, 200, 250, 120, 30, 377, 105, 45, 89, 73]
+    const monthsArray = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+    const values = [1,1,1,1,1,1,1,1,1,1,1,2]
 
     //Functions that executes the first time this page is rendered
     const init_func = async() => {
@@ -44,6 +48,11 @@ export const IndividualStats = () => {
         let years = []
         for(let i = start; i < end + 1; i++){ years.push(i) }
         setYearsArray( years )
+        setSelectedYear( yearsArray[0] )
+
+        setTimeout(()=>{}, 100 )
+
+
     }
 
     useEffect( ()=> {init_func()}, [])
@@ -57,37 +66,62 @@ export const IndividualStats = () => {
             </div>
             <div style={{height: 45}}/>
 
-            <div className='d-flex justify-content-center'>
-                <div className='p-1 mb-0 bg-danger text-white' style={{width}}>
+            <div>
+                <div className='d-flex justify-content-center'>
+                    <div className='p-1 mb-0 bg-danger text-white' style={{width}}>
 
-                    <div className='d-flex justify-content-between'>
-                        <div className='d-flex justify-content-start p-2'><i>Selecciona un restaurante</i></div> 
-                        <div className='d-flex justify-content-end'>
-                            <Picker setValue={setSelectedRestaurant} infoArray={restaurantes}/>
+                        <div className='d-flex justify-content-between'>
+                            <div className='d-flex justify-content-start p-2'><i>Selecciona un restaurante</i></div> 
+                            <div className='d-flex justify-content-end'>
+                                <Picker setValue={setSelectedRestaurant} infoArray={restaurantes}/>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>           
+            </div>
+            <div style={{height: 45}}/> 
+
+
+            <div>
+                <div className="d-flex justify-content-center">
+                    <div>
+                        <div className='p-1 mb-0 bg-danger text-white' style={{width}}>
+                            <div className='d-flex justify-content-between'>
+
+                                <div className='d-flex justify-content-start p-2'><i>Ventas anuales</i></div> 
+
+                                    <div className='d-flex justify-content-end'>
+                                        <Picker setValue={setSelectedYear} infoArray={yearsArray}/>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        <div className="d-flex justify-content-center">
+                            <LineGraph labels={monthsArray} values={values} options={options}/>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div style={{height: 45}}/>
+
+            <div>
+                <div className='d-flex justify-content-center'>
+                    <div className='p-1 mb-0 bg-danger text-white' style={{width}}>
+
+                        <div className='d-flex justify-content-between'>
+                            <div className='d-flex justify-content-start p-2'><i>Platillo más vendido</i></div> 
                         </div>
                     </div>
+                </div>
 
+                <div className="d-flex justify-content-center">
+                    <div style={{width: 400}}/>
+                    <DoughnutGraph labels={platillos} values={ventas} options={options}/>
                 </div>
             </div>
-            <div style={{height: 45}}/>
-
-            <IndividualYearStats selectedRestaurant={selectedRestaurant} yearsArray={yearsArray}/>
-            <div style={{height: 45}}/>
-
-            <div className='d-flex justify-content-center'>
-                <div className='p-1 mb-0 bg-danger text-white' style={{width}}>
-
-                    <div className='d-flex justify-content-between'>
-                        <div className='d-flex justify-content-start p-2'><i>Platillo más vendido</i></div> 
-                    </div>
-                </div>
-            </div>
-
-            <div className="d-flex justify-content-center">
-                <div style={{width: 400}}/>
-                <DoughnutGraph labels={platillos} values={ventas} options={{}}/>
-            </div>
-
             <div style={{height: 45}}/>
     
         </>
