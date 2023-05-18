@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { getData, getDateRange, matrixToArray } from '../functions'
-import { DoughnutGraph, LineGraph, Picker } from '../Components'
+import { getData, getDateRange, getDifferentValues, getYearSales, matrixToArray } from '../functions'
+import { BarGraph, DoughnutGraph, LineGraph, Picker } from '../Components'
 
 export const IndividualStats = () => {
     
     //DB structure
-    const [ minDate, setMinDate ] = useState(undefined)
-    const [ maxDate, setMaxDate ] = useState(undefined)
     const [restaurantes, setRestaurantes ] = useState([])
     const [yearsArray, setYearsArray] = useState([])
+    const [ genders, setGenders ] = useState([])
+    const [ months, setMonths ] = useState([])
+    const [ sales, setSales ] = useState([])
 
     //User variables
     const [selectedYear, setSelectedYear] = useState(undefined)
@@ -20,17 +21,18 @@ export const IndividualStats = () => {
 
     const platillos = ['Pizza', 'Enchiladas', 'Sopa', 'Chilaquiles', 'Hamburguesa', 'Bistec', 'Cheesecake', 'Pie de limon', 'Galletas', 'Atun' ]
     const ventas = [ 100, 200, 250, 120, 30, 377, 105, 45, 89, 73]
-    const monthsArray = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-    const values = [1,1,1,1,1,1,1,1,1,1,1,2]
 
     //Functions that executes the first time this page is rendered
     const init_func = async() => {
 
         //Get the date range
         const dateArray = await getDateRange()
-        setMinDate( dateArray[0].substr(0,10) )
-        setMaxDate( dateArray[1].substr(0,10) )
+        const start = Number( dateArray[0].substr(0,4) )
+        const end = Number( dateArray[1].substr(0,4) )
+        let years = []
+        for(let i = start; i < end + 1; i++){ years.push(i) }
+        setYearsArray( years )
+        setSelectedYear( years[0] )
 
         //Timeout for promises to be fullfilled 
         setTimeout( ()=>{}, 100 )
@@ -42,20 +44,22 @@ export const IndividualStats = () => {
 
         setTimeout( () => {}, 100)
 
-        //Array of available years
-        const start = Number( dateArray[0].substr(0,4) )
-        const end = Number( dateArray[1].substr(0,4) )
-        let years = []
-        for(let i = start; i < end + 1; i++){ years.push(i) }
-        setYearsArray( years )
-        setSelectedYear( yearsArray[0] )
+        const clientsGenders = await getDifferentValues('clientes', 'sexo')
+        setGenders( clientsGenders )
 
-        setTimeout(()=>{}, 100 )
+        const graph1 = await getYearSales( arrayRestaurantes[0], years[0] )
+        setMonths( graph1.column1Array )
+        setSales( graph1.column2Array )
+    }
 
-
+    const handleParamsChange = async() => {
+        const graph1 = await getYearSales( selectedRestaurant, selectedYear)
+        setMonths( graph1.column1Array )
+        setSales( graph1.column2Array )
     }
 
     useEffect( ()=> {init_func()}, [])
+    useEffect( () => { handleParamsChange() }, [ selectedRestaurant, selectedYear])
 
     return (
         <>
@@ -66,7 +70,7 @@ export const IndividualStats = () => {
             </div>
             <div style={{height: 45}}/>
 
-            <div>
+            <div className='Seleccion de restaurante y año'>
                 <div className='d-flex justify-content-center'>
                     <div className='p-1 mb-0 bg-danger text-white' style={{width}}>
 
@@ -74,6 +78,8 @@ export const IndividualStats = () => {
                             <div className='d-flex justify-content-start p-2'><i>Selecciona un restaurante</i></div> 
                             <div className='d-flex justify-content-end'>
                                 <Picker setValue={setSelectedRestaurant} infoArray={restaurantes}/>
+                                <div style={{width: 15}}/>
+                                <Picker setValue={setSelectedYear} infoArray={yearsArray}/>
                             </div>
                         </div>
 
@@ -82,24 +88,17 @@ export const IndividualStats = () => {
             </div>
             <div style={{height: 45}}/> 
 
-
-            <div>
+            <div className='Ventas anuales'>
                 <div className="d-flex justify-content-center">
                     <div>
                         <div className='p-1 mb-0 bg-danger text-white' style={{width}}>
                             <div className='d-flex justify-content-between'>
-
                                 <div className='d-flex justify-content-start p-2'><i>Ventas anuales</i></div> 
-
-                                    <div className='d-flex justify-content-end'>
-                                        <Picker setValue={setSelectedYear} infoArray={yearsArray}/>
-                                    </div>
-
                                 </div>
                             </div>
 
                         <div className="d-flex justify-content-center">
-                            <LineGraph labels={monthsArray} values={values} options={options}/>
+                            <LineGraph labels={months} values={sales} options={options}/>
                         </div>
 
                     </div>
@@ -107,7 +106,7 @@ export const IndividualStats = () => {
             </div>
             <div style={{height: 45}}/>
 
-            <div>
+            <div className='Platillo mas vendido'>
                 <div className='d-flex justify-content-center'>
                     <div className='p-1 mb-0 bg-danger text-white' style={{width}}>
 
@@ -118,8 +117,22 @@ export const IndividualStats = () => {
                 </div>
 
                 <div className="d-flex justify-content-center">
-                    <div style={{width: 400}}/>
+                    <div style={{width: 350}}/>
                     <DoughnutGraph labels={platillos} values={ventas} options={options}/>
+                </div>
+            </div>
+            <div style={{height: 45}}/>
+
+            <div className='Visitas por genero'>
+                <div className='d-flex justify-content-center'>
+                    <div className='p-1 mb-0 bg-danger text-white' style={{width}}>
+                        <div className='d-flex justify-content-between'>
+                            <div className='d-flex justify-content-start p-2'><i>Visitas por género</i></div> 
+                        </div>
+                    </div>
+                </div> 
+                <div className="d-flex justify-content-center">
+                    <BarGraph labels={genders} values={[1,2, 2.5]} options={{}}/>
                 </div>
             </div>
             <div style={{height: 45}}/>

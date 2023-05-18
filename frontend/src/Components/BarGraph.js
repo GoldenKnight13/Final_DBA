@@ -14,9 +14,16 @@ export const BarGraph = ({labels, values, options}) => {
         label: 'My First Dataset',
         data: values,
         backgroundColor: [
-            'rgb(255, 99, 132)',
+            'rgb(230, 30, 30)',
             'rgb(54, 162, 235)',
-            'rgb(255, 205, 86)'
+            'rgb(237, 221, 31)',
+            'rgb(241, 186, 61)', 
+            'rgb(190, 147, 56)',
+            'rgb(237, 31, 203)',
+            'rgb(162, 31, 237)',
+            'rgb(185, 48, 145)',
+            'rgb(103, 229, 121)',
+            'rgb(18, 74, 214)'
         ]}]
     }
 
