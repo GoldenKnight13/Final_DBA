@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { DemandPerFoodType, DoughnutGraph, Picker, TopFoodType, TopSalesRestaurants } from '../Components'
-import { getDateRange, getDifferentValues } from '../functions'
+import { DeliveryType, DemandPerFoodType, Picker, TopFoodType, TopSalesRestaurants } from '../Components'
+import { getDateRange } from '../functions'
 
 export const GroupStats = () => {
 
     //BD structure
-    const[ genders, setGenders ] = useState([])
     const [yearsArray, setYearsArray] = useState([])
-    const[ selectedGender, setSelectedGender ] = useState(undefined)
 
     //User variables
     const [selectedYear, setSelectedYear] = useState(0)
@@ -15,13 +13,7 @@ export const GroupStats = () => {
     //Style vars
     const width = 600
 
-    let restaurantes = []
-    let ventas = []
-
     const initFunc = async() => {
-        setGenders( await getDifferentValues('clientes', 'sexo') )
-        setSelectedGender( genders[0] )
-
         const dateArray = await getDateRange()
         const start = Number( dateArray[0].substr(0,4) )
         const end = Number( dateArray[1].substr(0,4) )
@@ -60,27 +52,8 @@ export const GroupStats = () => {
 
             <TopSalesRestaurants year={selectedYear} width={width}/>
             <TopFoodType year={selectedYear} width={width}/>
-
-            <div className='Visitas por genero'>
-                <div className='d-flex justify-content-center'>
-                    <div className='p-1 mb-0 bg-success text-white' style={{width}}>
-
-                        <div className='d-flex justify-content-between'>
-                            <div className='d-flex justify-content-start p-2'><i>Restaurantes más visitados por genero</i></div> 
-                            <div className='d-flex justify-content-end'>
-                                <Picker setValue={setSelectedGender} infoArray={genders}/>
-                            </div>
-                        </div>
-
-                    </div>
-                </div> 
-                <div className="d-flex justify-content-center">
-                    <div style={{width: 350}}/>
-                    <DoughnutGraph labels={restaurantes} values={ventas} options={{}}/>
-                </div>
-            </div>
-            <div style={{height: 45}}/>
-
+            <DemandPerFoodType year={selectedYear} width={width}/>
+            <DeliveryType year={selectedYear} width={width}/>
 
         </>
     )

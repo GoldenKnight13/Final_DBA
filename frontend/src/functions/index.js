@@ -31,6 +31,24 @@ const splitArray = ( dataArray ) => {
     return {column1Array, column2Array}
 }
 
+const sortByMonth = ( array ) => {
+
+    const monthsArray1 = [ 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre' ]
+    const monthsArray2 = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ]
+    let data = []
+    
+    monthsArray2.map((month, index) => {
+        return array.map((tuple) => {
+            if( tuple[0] === month){
+                return data.push([monthsArray1[index], tuple[1]])
+            }
+            return undefined
+        })
+    })
+
+    return data
+}
+
 export const getTables = async() => {
 
     const tablesInfo = await axios.get(`${server}/getTableNames`)
@@ -129,7 +147,7 @@ export const getTelephonesAndLocations = async() => {
         if( locationsCounter >= 3){
             return undefined
         } else {
-            locationsArray.push( [actualRestaurant ,tuple.direccion] )
+            locationsArray.push( [actualRestaurant ,tuple.codigo_postal, tuple.delegacion] )
             telephonesArray.push( [actualRestaurant ,tuple.telefono] )
             locationsCounter += 1
         }
@@ -161,9 +179,10 @@ export const getTopSalesFood = async(year) => {
     return splitArray( convertToArray( response.data ) )
 }
 
-export const getDemandPerFoodType = async() => {
-    const response = await axios.get( `${server}/getDemandPerFoodType` )
-    console.log( response.data )
+export const getDemandPerFoodType = async(year) => {
+    const response = await axios.get( `${server}/getDemandPerFoodType`, {
+        params: { year }    })
+    return splitArray( convertToArray( response.data ) )
 }
 
 export const getYearSales = async( restaurant, year ) => {
@@ -173,5 +192,76 @@ export const getYearSales = async( restaurant, year ) => {
             year
         }
     })
+    return splitArray(  sortByMonth( convertToArray( response.data ) ) )
+}
+
+export const getRestaurantDishSales = async( restaurant, year ) => {
+    const response = await axios.get(`${server}/getRestaurantDishSales`, {
+        params: {
+            restaurant,
+            year
+        }
+    })
     return splitArray( convertToArray( response.data ) )
 }
+
+export const getDeliveryCount = async( year ) => {
+    const response = await axios.get( `${server}/getDeliveryCount`, {
+        params: { year }    })
+    return splitArray( convertToArray( response.data ) )
+}
+
+export const getAverageTicket = async( restaurant, year ) => {
+    const response = await axios.get( `${server}/getAverageTicket`, {
+        params: { 
+            restaurant,
+            year 
+        }})
+    return splitArray( convertToArray( response.data ) )
+}
+
+export const getTopLocations = async( restaurant, year ) => {
+    const response = await axios.get( `${server}/getTopLocations`, {
+        params: { 
+            restaurant,
+            year 
+        }})
+
+    const dataArray = convertToArray( response.data )
+
+    const dataArraylen = dataArray.length
+    let column1Array = []
+    let column2Array = []
+
+    for(let i = 0; i < dataArraylen; i++){
+        column1Array.push( `${dataArray[i][1]} ${dataArray[i][0]}` )
+        column2Array.push( dataArray[i][2] )
+    }
+
+    return {column1Array, column2Array}
+
+
+}
+
+export const getGenderVisits = async( restaurant, year ) => {
+    const response = await axios.get( `${server}/getGenderInfluence`, {
+        params: { 
+            restaurant,
+            year 
+        }})
+
+    return splitArray( convertToArray( response.data ) )
+}
+
+export const getVisitsPerRestaurants = async( restaurant, year ) => {
+    const response = await axios.get( `${server}/getVisitsPerRestaurants`, {
+        params: { 
+            restaurant,
+            year 
+        }})
+
+    return splitArray( convertToArray( response.data ) )
+}
+
+
+

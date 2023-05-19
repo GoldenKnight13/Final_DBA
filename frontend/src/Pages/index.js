@@ -1,4 +1,3 @@
-export * from './Proof'
 export * from './MainPage'
 export * from './GroupStats'
 export * from './IndividualStats'

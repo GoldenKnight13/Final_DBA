@@ -12,7 +12,7 @@ export const CollapseRow = ({tuple, telephonesAndLocations, width}) => {
 
             if( values[0] === id ){
                 return <p key={values} className="card-text">
-                    {values[1]}&emsp;
+                    CP: {values[1]}&emsp; Delegacion: {values[2]}&emsp;
                 </p>
             } else {
                 return <></>

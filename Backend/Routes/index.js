@@ -1,7 +1,9 @@
 const express = require('express')
 const { getData, getTables, getColumns, getCount, getDistinctValues, 
     getTelephonesAndLocations, getDateRange, getTopSalesRestaurants, 
-    getTopSalesFood, getDemandPerFoodType, getYearSales} = require('../Controllers')
+    getTopSalesFood, getDemandPerFoodType, getYearSales, 
+    getRestaurantDishSales, getDeliveryCount, getAverageTicket, 
+    getTopLocations, getGenderInfluence, getVisitsPerRestaurant} = require('../Controllers')
 
 const router = express.Router()
 
@@ -17,6 +19,12 @@ router.get('/getTopSalesRestaurants', getTopSalesRestaurants)
 router.get('/getTopSalesFood', getTopSalesFood)
 router.get('/getDemandPerFoodType', getDemandPerFoodType)
 router.get('/getYearSales', getYearSales)
+router.get('/getRestaurantDishSales', getRestaurantDishSales)
+router.get('/getDeliveryCount', getDeliveryCount)
+router.get('/getAverageTicket', getAverageTicket)
+router.get('/getTopLocations', getTopLocations)
+router.get('/getGenderInfluence', getGenderInfluence)
+router.get('/getVisitsPerRestaurants', getVisitsPerRestaurant)
 
 
 //POST

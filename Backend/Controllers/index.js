@@ -1,4 +1,3 @@
-const { response } = require('express')
 const { db } = require('../config')
 
 //Create
@@ -73,7 +72,7 @@ const getDistinctValues = async(req, res) => {
 
 const getTelephonesAndLocations = async(req, res) => {
 
-    const query = 'SELECT restaurantes.nombre_restaurante, sucursales.direccion, sucursales.telefono FROM restaurantes, sucursales WHERE restaurantes.id_restaurante = sucursales.id_restaurante'
+    const query = 'SELECT restaurantes.nombre_restaurante, sucursales.codigo_postal, sucursales.delegacion, sucursales.telefono FROM restaurantes, sucursales WHERE restaurantes.id_restaurante = sucursales.id_restaurante'
     db.query(query, (error, result) => {
         if(error){
             console.log(error)
@@ -149,23 +148,28 @@ const getTopSalesFood = async(req, res) => {
 
 }
 
-//Revisar
 const getDemandPerFoodType = async( req,res ) => {
+
+    const { year } = req.query
+
     const query = `
-    SELECT r.id_restaurante, nombre_restaurante, tipo_comida, COUNT(p.id_pedido) total
-    FROM restaurantes r, sucursales s, pedidos p, contenido_pedido c
-    WHERE r.id_restaurante = s.id_restaurante
-    AND s.id_sucursal = p.id_sucursal
-    AND p.id_pedido = c.id_pedido
-    GROUP BY id_restaurante, nombre_restaurante, tipo_comida
-    ORDER BY COUNT(p.id_pedido) DESC
+    SELECT I.tipo_comida, SUM(Total) cantidad
+    FROM (SELECT r.id_restaurante, nombre_restaurante, tipo_comida, COUNT(p.id_pedido) as Total
+        FROM restaurantes r, sucursales s, pedidos p, contenido_pedido c
+        WHERE r.id_restaurante = s.id_restaurante
+        AND s.id_sucursal = p.id_sucursal
+        AND p.id_pedido = c.id_pedido
+        AND EXTRACT(YEAR FROM fecha_pedido) = '${year}'
+        GROUP BY id_restaurante, nombre_restaurante, tipo_comida
+        ORDER BY COUNT(p.id_pedido)) I
+    GROUP BY I.tipo_comida
+    ORDER BY SUM(Total) DESC
     LIMIT 10;`
 
     db.query( query, (error, result) => {
         if(error){
             console.log(error)
         }
-        console.log(result)
 
         const len = result.length
         for( let i =0; i < len; i++){
@@ -207,6 +211,137 @@ const getYearSales = async(req,res) => {
 
 }
 
+const getRestaurantDishSales = async(req,res) => {
+
+    const { restaurant, year } = req.query
+
+    const query = `SELECT nombre_platillo, SUM(p.precio) ventas
+        FROM restaurantes r, platillos p, contenido_pedido c, pedidos
+        WHERE r.id_restaurante = p.id_restaurante
+        AND p.id_platillo = c.id_platillo
+        AND r.nombre_restaurante = '${restaurant}'
+        AND EXTRACT(YEAR FROM pedidos.fecha_pedido) = '${year}'
+        GROUP BY nombre_platillo
+        ORDER BY SUM(p.precio) DESC
+        LIMIT  5;`
+
+    db.query( query, (error, result) => {
+        if(error){
+            console.log(error)
+        }
+        res.send(result)
+    })
+}
+
+const getDeliveryCount = async( req,res ) => {
+
+    const { year } = req.query
+
+    const query = `
+    SELECT tipo_pedido, COUNT(tipo_pedido)
+    FROM pedidos
+    WHERE EXTRACT(YEAR FROM pedidos.fecha_pedido) = '${year}'
+    GROUP BY (tipo_pedido)
+    ORDER BY COUNT(tipo_pedido) DESC;`
+
+    db.query( query, (error, result) => {
+        if(error){
+            console.log(error)
+        }
+
+        res.send( result )
+    })
+}
+
+//Revisar
+const getAverageTicket = async(req, res) => {
+
+    const { restaurant, year } = req.query
+
+    const query = `SELECT nombre_restaurante, ROUND(SUM(sumas)/COUNT(*),2) AS ticket_promedio
+    FROM (SELECT nombre_restaurante, p.id_pedido, SUM(precio) as sumas
+          FROM restaurantes r, sucursales s, pedidos p, contenido_pedido c 
+          WHERE r.id_restaurante = s.id_restaurante
+          AND s.id_sucursal = p.id_sucursal
+          AND p.id_pedido = c.id_pedido
+          AND r.id_restaurante = 1
+          GROUP BY id_pedido
+          ORDER BY SUM(precio)) K;
+    `
+
+    db.query( query, (error, result) => {
+        if(error){
+            console.log(error)
+        }
+    })
+}
+
+const getTopLocations = async(req, res) => {
+
+    const { restaurant, year } = req.query
+
+    const query = `SELECT  s.codigo_postal, s.delegacion, SUM(precio) total
+    FROM restaurantes r, sucursales s, pedidos p, contenido_pedido c
+    WHERE r.id_restaurante = s.id_restaurante
+    AND s.id_sucursal = p.id_sucursal
+    AND p.id_pedido = c.id_pedido
+    AND r.nombre_restaurante = '${restaurant}'
+    AND EXTRACT(YEAR FROM p.fecha_pedido) = '${year}'
+    GROUP BY s.id_sucursal
+    ORDER BY SUM(precio) DESC
+    LIMIT 3;`
+
+    db.query( query, (error, result) => {
+        if(error){
+            console.log(error)
+        }
+        res.send(result)
+    })
+}
+
+const getGenderInfluence = async(req, res) => {
+
+    const { restaurant, year } = req.query
+
+    const query = `SELECT c.sexo, COUNT(sexo)
+    FROM restaurantes r, sucursales s, pedidos p, clientes c
+    WHERE r.id_restaurante = s.id_restaurante
+    AND s.id_sucursal = p.id_sucursal
+    AND p.id_cliente = c.id_cliente
+    AND r.nombre_restaurante = '${restaurant}'
+    AND EXTRACT(YEAR FROM p.fecha_pedido) = '${year}'
+    GROUP BY sexo
+    ORDER BY COUNT(sexo) DESC;
+    `
+
+    db.query( query, (error, result) => {
+        if(error){
+            console.log(error)
+        }
+        res.send(result)
+    })
+}
+
+const getVisitsPerRestaurant = async(req, res) => {
+
+    const { restaurant, year } = req.query
+
+    const query = `SELECT  tipo_pedido, COUNT(tipo_pedido)
+    FROM restaurantes r, pedidos p, sucursales s
+    WHERE r.id_restaurante = s.id_restaurante
+    AND s.id_sucursal = p.id_sucursal
+    AND r.nombre_restaurante = '${restaurant}'
+    AND EXTRACT(YEAR FROM p.fecha_pedido) = '${year}'
+    GROUP BY (tipo_pedido)
+    ORDER BY COUNT(tipo_pedido) DESC;`
+
+    db.query( query, (error, result) => {
+        if(error){
+            console.log(error)
+        }
+        res.send(result)
+    })
+}
 
 //Update
 //Delete
@@ -216,5 +351,7 @@ module.exports = {
     getTables, getColumns, getCount, getData,
     getDistinctValues, getTelephonesAndLocations, getDateRange, 
     getTopSalesRestaurants, getTopSalesFood, getDemandPerFoodType,
-    getYearSales
+    getYearSales, getRestaurantDishSales, getDeliveryCount,
+    getAverageTicket, getTopLocations, getGenderInfluence,
+    getVisitsPerRestaurant
 }
