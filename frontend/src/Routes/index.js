@@ -11,8 +11,8 @@ export const Router = () => {
             </div>
             <div>
                 <Routes>
-                    <Route path='/*' element={ <MainPage/> }/>
-                    <Route path='/individualStats' element={ <IndividualStats/> }/>
+                    <Route path='/*' element={ <IndividualStats/> }/>
+                    <Route path='/restaurants' element={ <MainPage/> }/>
                     <Route path='/groupStats' element={ <GroupStats/> }/>
                     <Route path='/meme' element={ <Meme/>}/>
                 </Routes>

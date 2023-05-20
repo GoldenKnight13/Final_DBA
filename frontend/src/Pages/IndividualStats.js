@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { getData, getDateRange, matrixToArray } from '../functions'
-import { DishSales, Picker, YearSales, TopLocations, GenderVisits, DeliveryTypePerRestaurant } from '../Components'
+import { DishSales, Picker, YearSales, TopLocations, GenderVisits, DeliveryTypePerRestaurant, AverageTicket, AverageAge, FoodType } from '../Components'
 
 export const IndividualStats = () => {
     
@@ -43,7 +43,7 @@ export const IndividualStats = () => {
             <div style={{height: 45}}/>
 
             <div className="d-flex justify-content-center">
-                <h3>Individual Stats</h3>
+                <h3>Estadísticas individuales de {selectedRestaurant}</h3>
             </div>
             <div style={{height: 45}}/>
 
@@ -65,9 +65,10 @@ export const IndividualStats = () => {
             </div>
             <div style={{height: 45}}/> 
 
+            <FoodType restaurant={selectedRestaurant} width={width}/>
             <YearSales restaurant={selectedRestaurant} year={selectedYear} width={width}/>
+            <AverageTicket restaurant={selectedRestaurant} year={selectedYear} width={width}/>
             <DishSales restaurant={selectedRestaurant} year={selectedYear} width={width}/>
-            {/*<AverageTicket restaurant={selectedRestaurant} year={selectedYear} width={width}/>*/}
             <TopLocations restaurant={selectedRestaurant} year={selectedYear} width={width}/>
             <GenderVisits restaurant={selectedRestaurant} year={selectedYear} width={width}/>
             <DeliveryTypePerRestaurant restaurant={selectedRestaurant} year={selectedYear} width={width}/>

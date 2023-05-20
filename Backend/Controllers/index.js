@@ -253,26 +253,32 @@ const getDeliveryCount = async( req,res ) => {
     })
 }
 
-//Revisar
 const getAverageTicket = async(req, res) => {
 
     const { restaurant, year } = req.query
 
-    const query = `SELECT nombre_restaurante, ROUND(SUM(sumas)/COUNT(*),2) AS ticket_promedio
+    const query = `SELECT K.nombre_restaurante, ROUND(SUM(K.sumas)/COUNT(*),2) AS ticket_promedio
     FROM (SELECT nombre_restaurante, p.id_pedido, SUM(precio) as sumas
           FROM restaurantes r, sucursales s, pedidos p, contenido_pedido c 
           WHERE r.id_restaurante = s.id_restaurante
           AND s.id_sucursal = p.id_sucursal
           AND p.id_pedido = c.id_pedido
-          AND r.id_restaurante = 1
-          GROUP BY id_pedido
-          ORDER BY SUM(precio)) K;
-    `
+          AND r.nombre_restaurante = '${restaurant}'
+          AND EXTRACT(YEAR FROM p.fecha_pedido) = '${year}'
+          GROUP BY p.id_pedido
+          ORDER BY SUM(precio)) K
+    GROUP BY nombre_restaurante;`
 
     db.query( query, (error, result) => {
         if(error){
             console.log(error)
         }
+        const len = result.length
+        for( let i= 0; i <len; i++){
+            delete result[i].nombre_restaurante
+        }
+
+        res.send(result)
     })
 }
 
@@ -289,7 +295,7 @@ const getTopLocations = async(req, res) => {
     AND EXTRACT(YEAR FROM p.fecha_pedido) = '${year}'
     GROUP BY s.id_sucursal
     ORDER BY SUM(precio) DESC
-    LIMIT 3;`
+    LIMIT 5;`
 
     db.query( query, (error, result) => {
         if(error){
@@ -343,6 +349,41 @@ const getVisitsPerRestaurant = async(req, res) => {
     })
 }
 
+const getAverageAge = async(req, res) => {
+
+    const { restaurant, year } = req.query
+
+    const query = ` SELECT nombre_restaurante, ROUND(SUM(Año)/COUNT(*), 0) edad
+    FROM (SELECT nombre_restaurante, nombre_cliente, ROUND(DATEDIFF('2023-05-29', fecha_nacimiento)/365, 0) AS Año
+          FROM restaurantes r, sucursales s, pedidos p, clientes c 
+          WHERE r.id_restaurante = s.id_restaurante
+          AND s.id_sucursal = p.id_sucursal
+          AND p.id_cliente = c.id_cliente
+          AND r.id_restaurante = 1
+          AND EXTRACT(YEAR FROM fecha_pedido) = 2022) K
+    GROUP BY nombre_restaurante;`
+
+    db.query( query, (error, result) => {
+        if(error){
+            console.log(error)
+        }
+        delete result[0].nombre_restaurante
+        res.send(result)
+    })
+
+}
+
+const getFoodType = async(req, res) => {
+    const {restaurant} = req.query
+    const query = `SELECT tipo_comida FROM restaurantes WHERE restaurantes.nombre_restaurante='${restaurant}'`
+    db.query( query, (error, result) => {
+        if(error){
+            console.log(error)
+        }
+        res.send(result)
+    })
+}
+
 //Update
 //Delete
 
@@ -353,5 +394,5 @@ module.exports = {
     getTopSalesRestaurants, getTopSalesFood, getDemandPerFoodType,
     getYearSales, getRestaurantDishSales, getDeliveryCount,
     getAverageTicket, getTopLocations, getGenderInfluence,
-    getVisitsPerRestaurant
+    getVisitsPerRestaurant, getAverageAge, getFoodType
 }

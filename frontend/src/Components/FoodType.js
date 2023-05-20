@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import { getAverageTicket } from '../functions'
+import React, { useState, useEffect } from 'react'
+import { getFoodType } from '../functions'
 
-export const AverageTicket = ({restaurant, year, width}) => {
+export const FoodType = ({ restaurant, width}) => {
 
-    const [ averageTicket, setAverageTicket ] = useState(undefined)
+    const [ foodType, setFoodType ] = useState(undefined)
 
     const init_func = async() => {
-        const data = await getAverageTicket(restaurant, year)
-        setAverageTicket( `$ ${data[0]}`)
+        const data = await getFoodType( restaurant )
+        setFoodType( data[0] )
     }
 
-    useEffect( ()=>{ init_func() }, [restaurant, year])
+    useEffect( ()=>{ init_func() }, [restaurant])
 
     return (
         <>
@@ -19,10 +19,10 @@ export const AverageTicket = ({restaurant, year, width}) => {
                     <div className='p-1 mb-0 bg-danger text-white' style={{width}}>
 
                         <div className='d-flex justify-content-between'>
-                            <div className='d-flex justify-content-start p-2'><i>Ticket promedio</i></div> 
+                            <div className='d-flex justify-content-start p-2'><i>Tipo de comida</i></div> 
                             <div className='d-flex justify-content-end'>
                                 <div className='p-1 mb-0 bg-white text-dark'>
-                                    {averageTicket}
+                                    {foodType}
                                 </div>
                             </div>
                         </div>

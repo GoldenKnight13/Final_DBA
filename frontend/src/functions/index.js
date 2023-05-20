@@ -217,7 +217,7 @@ export const getAverageTicket = async( restaurant, year ) => {
             restaurant,
             year 
         }})
-    return splitArray( convertToArray( response.data ) )
+    return  convertToArray( response.data )
 }
 
 export const getTopLocations = async( restaurant, year ) => {
@@ -263,5 +263,20 @@ export const getVisitsPerRestaurants = async( restaurant, year ) => {
     return splitArray( convertToArray( response.data ) )
 }
 
+export const getAverageAge = async( restaurant, year ) => {
+    const response = await axios.get( `${server}/getAverageAge`, {
+        params: { 
+            restaurant,
+            year 
+        }})
+        
+    return matrixToArray( convertToArray( response.data ) )
+}
+
+export const getFoodType = async(restaurant) => {
+    const response = await axios.get( `${server}/getFoodType`, {
+        params: { restaurant } })
+    return matrixToArray( convertToArray( response.data ) )
+}
 
 

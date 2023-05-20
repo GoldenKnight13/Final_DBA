@@ -16,7 +16,6 @@ export const YearSales = ({restaurant, year, width}) => {
         setSales( graph1.column2Array )
     }
 
-    useEffect( ()=>{ initFunc() }, [])
     useEffect( ()=>{ initFunc() }, [restaurant, year])
 
     return (

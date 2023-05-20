@@ -26,11 +26,11 @@ export const DeliveryType = ({year, width}) => {
                         </div>
                     </div>
                 </div>
-                <div className="d-flex justify-content-center">
+                {/* <div className="d-flex justify-content-center">
                     <div style={{width: 350}}/>
                     <DoughnutGraph labels={deliveryTypes} values={deliveryCount} options={{}}/>
                 </div>
-                <div style={{height: 75}}/>
+                <div style={{height: 75}}/> */}
                 <div className="d-flex justify-content-center">
                     <BarGraph labels={deliveryTypes} values={deliveryCount} options={{}}/>
                 </div>

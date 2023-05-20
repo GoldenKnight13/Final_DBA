@@ -23,18 +23,22 @@ export const TopFoodType = ({year, width}) => {
                     <div className='p-1 mb-0 bg-success text-white' style={{width}}>
 
                         <div className='d-flex justify-content-between'>
-                            <div className='d-flex justify-content-start p-2'><i>Tipo de comida más vendido</i></div> 
+                            <div className='d-flex justify-content-start p-2'><i>Tipo de comida más vendido ($)</i></div> 
                         </div>
                     </div>
                 </div>
                 <div className="d-flex justify-content-center">
-                    <div style={{width: 350}}/>
+                    <div style={{width:550}}/>
                     <DoughnutGraph labels={foodType} values={sales} options={{}}/>
+                    <div className="d-flex align-items-center">
+                        <BarGraph labels={foodType} values={sales} options={{}}/>
+                    </div> 
+                    <div style={{width:550}}/>
                 </div>
-                <div style={{height: 75}}/>
+                {/* <div style={{height: 75}}/>
                 <div className="d-flex justify-content-center">
                     <BarGraph labels={foodType} values={sales} options={{}}/>
-                </div>
+                </div> */}
             </div>
             <div style={{height: 45}}/>
         </>

@@ -14,6 +14,8 @@ export * from './AverageTicket'
 export * from './TopLocations'
 export * from './GenderVisits'
 export * from './DeliveryTypePerRestaurant'
+export * from './AverageAge'
+export * from './FoodType'
 
 
 

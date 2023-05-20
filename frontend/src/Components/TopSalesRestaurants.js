@@ -29,11 +29,11 @@ export const TopSalesRestaurants = ({year, width}) => {
                     </div>
                 </div>
 
-                <div className="d-flex justify-content-center">
+                {/* <div className="d-flex justify-content-center">
                     <div style={{width: 350}}/>
                     <DoughnutGraph labels={restaurantes} values={ventas} options={{}}/>
                 </div>
-                <div style={{height: 75}}/>
+                <div style={{height: 75}}/> */}
                 <div className="d-flex justify-content-center">
                     <BarGraph labels={restaurantes} values={ventas} options={{}}/>
                 </div>

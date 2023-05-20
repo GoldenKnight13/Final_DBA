@@ -25,16 +25,16 @@ export const DishSales = ({restaurant,year,width}) => {
                     <div className='p-1 mb-0 bg-danger text-white' style={{width}}>
 
                         <div className='d-flex justify-content-between'>
-                            <div className='d-flex justify-content-start p-2'><i>Platillo más vendido</i></div> 
+                            <div className='d-flex justify-content-start p-2'><i>Platillo más vendido ($)</i></div> 
                         </div>
                     </div>
                 </div>
 
-                <div className="d-flex justify-content-center">
+               {/*  <div className="d-flex justify-content-center">
                     <div style={{width: 350}}/>
                     <DoughnutGraph labels={dishes} values={sales} options={options}/>
                 </div>
-                <div style={{height:75}}/>
+                <div style={{height:75}}/> */}
                 <div className="d-flex justify-content-center">
                     <BarGraph labels={dishes} values={sales} options={options}/>
                 </div>
